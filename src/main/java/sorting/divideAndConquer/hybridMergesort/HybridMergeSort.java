@@ -30,7 +30,90 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 	protected static int INSERTIONSORT_APPLICATIONS = 0;
 
 	public void sort(T[] array, int leftIndex, int rightIndex) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+
+		MERGESORT_APPLICATIONS = 0;
+		INSERTIONSORT_APPLICATIONS = 0;
+		
+		if (leftIndex < 0 || rightIndex >= array.length) {
+			return;
+		}
+		
+		if (rightIndex - leftIndex + 1 <= SIZE_LIMIT) {
+			insertionSort(array, leftIndex, rightIndex);
+		} else {
+
+			if (leftIndex >= rightIndex) {
+				return;
+			}
+
+			int middleIndex = (leftIndex + rightIndex) /2;
+
+			sort(array, leftIndex, middleIndex);
+			sort(array, middleIndex + 1, rightIndex);
+			merge(array, leftIndex, middleIndex, rightIndex);
+
+		}
+
+
+	}
+
+	public void insertionSort(T[] array, int leftIndex, int rightIndex) {
+
+		for (int i = leftIndex + 1; i <= rightIndex; i++) {
+
+			T aux = array[i];
+			int j = i - 1;
+
+			while ((j >= leftIndex) && aux.compareTo(array[j]) < 0) {
+				array[j + 1] = array[j];
+				j--;
+			}
+
+			array[j + 1] = aux;
+		}
+
+		INSERTIONSORT_APPLICATIONS++;
+	}
+
+	public void merge(T[] array, int leftIndex, int middleIndex, int rightIndex) {
+
+		T[] helper = (T[]) new Comparable[array.length];
+
+		for (int i = 0; i < array.length; i++) {
+			helper[i] = array[i];
+		}
+
+		int i = leftIndex;
+		int j = middleIndex + 1;
+
+		int k = leftIndex;
+
+		while ((i <= middleIndex) && (j <= rightIndex)) {
+
+			if (helper[i].compareTo(helper[j]) <= 0) {
+				array[k] = helper[i];
+				i++;
+			} else {
+				array[k] = helper[j];
+				j++;
+			}
+
+			k++;
+		}
+
+		while (i <= middleIndex) {
+			array[k] = helper[i];
+			i++;
+			k++;
+		}
+
+		while (j <= rightIndex) {
+			array[k] = helper[j];
+			j++;
+			k++;
+		}
+
+		MERGESORT_APPLICATIONS++;
+
 	}
 }
